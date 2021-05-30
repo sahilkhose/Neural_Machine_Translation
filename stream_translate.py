@@ -95,24 +95,64 @@ def stream_run():
     np.random.seed(seed * 13 // 7)
     model = load_model(args)
 
-    st.title("Machine Translation")
+    st.title("Neural Machine Translation")
+    # st.title("Spanish To English Translation")
     html_temp = """
-    <div style="background-color:tomato;padding:10px">
-    <h2 style="color:white;text-align:center;">Spanish to English Translation</h2>
+    <div style="background-color:brown;padding:10px">
+    <h2 style="color:yellow;text-align:center;">Spanish to English Translation</h2>
     </div>
     """
     st.markdown(html_temp, unsafe_allow_html=True)
+    st.text("")
+    st.text("")
+    st.success("Welcome! Please enter a sentence!")   
+    st.sidebar.markdown('''
+    # What is this project?
+    - This is a Neural Machine Translation Model, which translates from Spanish to English. :books:
+    - If you know Spanish go ahead and enter the sentence you want to translate! :bulb:
+    - If you are just like me, don't worry, enter the sentence in English and Google will convert it to Spanish before feeding it to the model. :brain:
+    - You can compare how Google predicts the english translation and what our model generates. :eyes:
+    # What is Beam Size?
+    - It determines the number of alternatives our model looks at while predicting each word, to get the best combination of words for the translation.
+    - Read more about it on this [blog](https://towardsdatascience.com/an-intuitive-explanation-of-beam-search-9b1d744e7a0f)
+    ''')
+    
+    st.sidebar.markdown('''Liked it? Give a :star:  on GitHub [here](https://github.com/sahilkhose/Neural_Machine_Translation)''')
 
-    en_sentence = st.text_input("English Sentence", help="Type Here")
+    lang = st.radio(
+    "Input Language",
+    ('English', 'Spanish'))
+
+    en_sentence = ""
+    es_sentence = ""
+
+    if lang == "Spanish":
+        es_sentence = st.text_input("Spanish Sentence")
+    else:
+        en_sentence = st.text_input("English Sentence", help="Enter sentence to translate")
+
+    # beam_size = st.text_input("Beam Size", "5")
+    beam_size = st.slider(label="Beam Size (recommended: 5)", min_value=1, max_value=20, value=5)
     if st.button("Translate"):  
-        es_sentence = translator.translate(en_sentence, lang_src="en", lang_tgt="es")
-        en_google = translator.translate(es_sentence, lang_tgt="en")
-        args["TEST_TARGET_FILE"] = [en_google]
-        args["TEST_SOURCE_FILE"] = [es_sentence]
-        st.success(f"Spanish sentence           : {es_sentence}")
-        st.success(f"Google's Eng Translation   : {en_google}")
-        decode_stream(args, st, model)
+        if es_sentence != "" or en_sentence != "":
+            if beam_size != "":
+                args["--beam-size"] = int(beam_size)
+            if lang != "Spanish":
+                es_sentence = translator.translate(en_sentence, lang_src="en", lang_tgt="es")
+            en_google = translator.translate(es_sentence, lang_tgt="en")
+            args["TEST_TARGET_FILE"] = [en_google]
+            args["TEST_SOURCE_FILE"] = [es_sentence]
+            st.success(f"Spanish sentence           : {es_sentence}")
+            st.success(f"Google's Eng Translation   : {en_google}")
+            decode_stream(args, st, model)
+        else:
+            st.exception(RuntimeError("Enter a sentence to translate!"))
+
 
 
 if __name__ == "__main__":
+    st.set_page_config(
+    initial_sidebar_state="expanded",
+    page_title="Machine Translation"
+    )
     stream_run()
