@@ -6,4 +6,4 @@ dev. ppl 61.4084<br>
 
 
 ## Try Translating yourself!
-- It is available [here](https://share.streamlit.io/sankalp1999/image_captioning_with_attention/main) on Streamlit Sharing.
+- It is available [here](https://share.streamlit.io/sahilkhose/neural_machine_translation/main/stream_translate.py) on Streamlit Sharing.
