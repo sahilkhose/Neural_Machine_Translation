@@ -1,0 +1,10 @@
+nltk
+docopt
+tqdm==4.29.1
+pytorch=1.0.0
+python=3.5
+numpy
+scipy
+tqdm
+nltk
+torchvision

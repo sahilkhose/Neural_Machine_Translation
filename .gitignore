@@ -1,3 +1,8 @@
+# data and models, model.bin and en_es_data are uploaded on dropbox
+*.bin 
+en_es_data/*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
