@@ -78,7 +78,7 @@ def stream_run():
     download_data()
     translator = google_translator()
     args = {}
-    args["--cuda"] = True
+    args["--cuda"] = False
     args["MODEL_PATH"] = "model.bin"
     args["--max-decoding-time-step"] = 70
     args["--beam-size"] = 5
