@@ -1,7 +1,7 @@
 nltk
 docopt
 tqdm==4.29.1
-pytorch==1.0.0
+torch
 numpy
 scipy
 tqdm
