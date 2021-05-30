@@ -7,5 +7,5 @@ scipy
 tqdm
 nltk
 torchvision
-google_translator
+google_trans_new
 streamlit
