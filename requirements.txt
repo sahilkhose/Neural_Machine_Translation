@@ -7,3 +7,5 @@ scipy
 tqdm
 nltk
 torchvision
+google_translator
+streamlit
