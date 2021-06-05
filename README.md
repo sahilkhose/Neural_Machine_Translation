@@ -5,7 +5,7 @@
 | ----------------|:-----------------------:|
 |  Corpus BLEU    | 37.0347                 |
 |  Dev ppl        | 61.4084                 |
-You can find the model weights [here](https://www.dropbox.com/s/etkwvmnqfo26hrc/model.bin?dl=0)
+- You can find the model weights [here](https://www.dropbox.com/s/etkwvmnqfo26hrc/model.bin?dl=0)
 --------------------------------------------------------------------------------------------
 ## Try Translating yourself!
 - The translation demo is available [here](https://share.streamlit.io/sahilkhose/neural_machine_translation/main/stream_translate.py) on Streamlit Sharing.
@@ -20,14 +20,14 @@ You can find the model weights [here](https://www.dropbox.com/s/etkwvmnqfo26hrc/
 - The pipeline and the implementations is inspired by the [Open-NMT](https://github.com/OpenNMT/OpenNMT-py) package. 
 
 <p align="center">
-<img src="https://github.com/sahilkhose/Neural_Machine_Translation/blob/master/figures/nmt.png" alt="drawing" width="350"/>
+<img src="https://github.com/sahilkhose/Neural_Machine_Translation/blob/main/figures/nmt.png" alt="drawing" width="350"/>
 </p>
 
 - The model becomes more powerful as we combine character-level with word-level language modelling. 
 - The idea is that whenever the NMT model generates a \<unk> token we run a character-level language model and generate a word in the output character by character. 
 - This hybrid word-character approach was proposed by [Luong and Manning 2016](https://arxiv.org/pdf/1604.00788.pdf) and turned out to be effective in increasing the performance of the NMT model (+1.2 BLEU).
 <p align="center">
-<img src="https://github.com/sahilkhose/Neural_Machine_Translation/blob/master/figures/nmt-hybrid.png" alt="drawing" width="350"/>
+<img src="https://github.com/sahilkhose/Neural_Machine_Translation/blob/main/figures/nmt-hybrid.png" alt="drawing" width="350"/>
 </p>
 
 --------------------------------------------------------------------------------------------
