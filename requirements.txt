@@ -1,10 +1,9 @@
 nltk
 docopt
-tqdm==4.29.1
+tqdm
 torch
 numpy
 scipy
-tqdm
 nltk
 torchvision
 google_trans_new
