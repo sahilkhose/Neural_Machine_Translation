@@ -62,8 +62,3 @@ class Highway(nn.Module):
     	X_highway = X_gate * X_proj + (1 - X_gate) * X_conv_out
 
     	return X_highway
-
-
-
-    ### END YOUR CODE
-

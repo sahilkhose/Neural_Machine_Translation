@@ -2,11 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """
-CS224N 2019-20: Homework 5
-vocab.py: Vocabulary Generation
-Pencheng Yin <pcyin@cs.cmu.edu>
-Sahil Chopra <schopra8@stanford.edu>
-
 Usage:
     vocab.py --train-src=<file> --train-tgt=<file> [options] VOCAB_FILE
 
@@ -47,7 +42,6 @@ class VocabEntry(object):
         self.unk_id = self.word2id['<unk>']
         self.id2word = {v: k for k, v in self.word2id.items()}
 
-        ## Additions to the A4 code:
         self.char_list = list(
             """ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]""")
 
@@ -65,7 +59,6 @@ class VocabEntry(object):
         assert self.start_of_word + 1 == self.end_of_word
 
         self.id2char = {v: k for k, v in self.char2id.items()}  # Converts integers to characters
-        ## End additions to the A4 code
 
     def __getitem__(self, word):
         """ Retrieve word's index. Return the index for the unk
@@ -148,27 +141,13 @@ class VocabEntry(object):
 
         @returns sents_var: tensor of (max_sentence_length, batch_size, max_word_length)
         """
-        ### YOUR CODE HERE for part 1e
-        ### TODO:
-        ###     - Use `words2charindices()` from this file, which converts each character to its corresponding index in the
-        ###       character-vocabulary.
-        ###     - Use `pad_sents_char()` from utils.py, which pads all words to max_word_length of all words in the batch,
-        ###       and pads all sentences to max length of all sentences in the batch. Read __init__ to see how to get
-        ###       index of character-padding token
-        ###     - Connect these two parts to convert the resulting padded sentences to a torch tensor.
-        ### HINT:
-        ###     - You may find .contiguous() useful after reshaping. Check the following links for more details:
-        ###         https://pytorch.org/docs/stable/tensors.html#torch.Tensor.contiguous
-        ###         https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
-        
         sents_ind = self.words2charindices(sents)
         sents_padded = pad_sents_char(sents_ind, self.char_pad)
         sents_var = torch.tensor(sents_padded, device=device)
         sents_var = sents_var.permute(1, 0, 2)
         sents_var = sents_var.contiguous()
 
-        return sents_var 
-        ### END YOUR CODE
+        return sents_var
 
     def to_input_tensor(self, sents: List[List[str]], device: torch.device) -> torch.Tensor:
         """ Convert list of sentences (words) into tensor with necessary padding for 

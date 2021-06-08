@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-"""
-CS224N 2019-20: Homework 5
-nmt_model.py: NMT Model
-Pencheng Yin <pcyin@cs.cmu.edu>
-Sahil Chopra <schopra8@stanford.edu>
-"""
 from collections import namedtuple
 import sys
 from typing import List, Tuple, Dict, Set, Union
@@ -49,7 +42,6 @@ class NMT(nn.Module):
         self.dropout_rate = dropout_rate
         self.vocab = vocab
 
-        ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
         self.encoder = nn.LSTM(input_size=word_embed_size, hidden_size=self.hidden_size, bias=True, bidirectional=True) # h_enc
         self.decoder = nn.LSTMCell(input_size=self.hidden_size + word_embed_size, hidden_size=self.hidden_size, bias=True) ## y_(hat)_t
         
@@ -60,8 +52,6 @@ class NMT(nn.Module):
         self.target_vocab_projection = nn.Linear(in_features=self.hidden_size, out_features=len(self.vocab.tgt), bias=False)
         
         self.dropout = nn.Dropout(self.dropout_rate)
-
-        ### END YOUR CODE FROM ASSIGNMENT 4
 
         if not no_char_decoder:
             self.charDecoder = CharDecoder(hidden_size, target_vocab=vocab.tgt)
@@ -84,24 +74,12 @@ class NMT(nn.Module):
 
         # Convert list of lists into tensors
 
-        ### YOUR CODE HERE for part 1i
-        ### TODO:
-        ###     Modify the code lines above as needed to fetch the character-level tensor
-        ###     to feed into encode() and decode(). You should:
-        ###     - Keep `target_padded` from A4 code above for predictions
-        ###     - Add `source_padded_chars` for character level padded encodings for source
-        ###     - Add `target_padded_chars` for character level padded encodings for target
-        ###     - Modify calls to encode() and decode() to use the character level encodings
-
         target_padded = self.vocab.tgt.to_input_tensor(target, device=self.device)   # Tensor: (tgt_len, b)
         source_padded_chars = self.vocab.src.to_input_tensor_char(source, device=self.device)
         target_padded_chars = self.vocab.tgt.to_input_tensor_char(target, device=self.device)
         enc_hiddens, dec_init_state = self.encode(source_padded_chars, source_lengths)
         enc_masks = self.generate_sent_masks(enc_hiddens, source_lengths)
         combined_outputs = self.decode(enc_hiddens, enc_masks, dec_init_state, target_padded_chars)
-
-
-        ### END YOUR CODE
 
         P = F.log_softmax(self.target_vocab_projection(combined_outputs), dim=-1)
 
@@ -143,8 +121,6 @@ class NMT(nn.Module):
         """
         enc_hiddens, dec_init_state = None, None
 
-        ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
-        ### Except replace "self.model_embeddings.source" with "self.model_embeddings_source"
         X = self.model_embeddings_source(source_padded)
         X = pack_padded_sequence(X, source_lengths)
         enc_hiddens, (last_hidden, last_cell) = self.encoder(X)
@@ -155,8 +131,6 @@ class NMT(nn.Module):
         init_decoder_cell = torch.cat((last_cell[0], last_cell[1]), 1)
      
         dec_init_state = (self.h_projection(init_decoder_hidden), self.c_projection(init_decoder_cell))
-
-        ### END YOUR CODE FROM ASSIGNMENT 4
 
         return enc_hiddens, dec_init_state
 
@@ -186,8 +160,6 @@ class NMT(nn.Module):
         # Initialize a list we will use to collect the combined output o_t on each step
         combined_outputs = []
 
-        ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
-        ### Except replace "self.model_embeddings.target" with "self.model_embeddings_target"
         enc_hiddens_proj = self.att_projection(enc_hiddens) 
         Y = self.model_embeddings_target(target_padded) # (tgt_len, b, e)
 
@@ -199,8 +171,6 @@ class NMT(nn.Module):
             o_prev = combined_output
         
         combined_outputs = torch.stack(combined_outputs, dim=0)
-
-        ### END YOUR CODE FROM ASSIGNMENT 4
 
         return combined_outputs
 
@@ -231,26 +201,19 @@ class NMT(nn.Module):
 
         combined_output = None
 
-        ### COPY OVER FROM ASSIGNMENT 4
         dec_state = self.decoder(Ybar_t, dec_state)
         (dec_hidden, dec_cell) = dec_state
         e_t = torch.squeeze(torch.bmm(enc_hiddens_proj, torch.unsqueeze(dec_hidden, dim=2)), dim=-1)
-
-        ### END YOUR CODE FROM ASSIGNMENT 4
 
         # Set e_t to -inf where enc_masks has 1
         if enc_masks is not None:
             e_t.data.masked_fill_(enc_masks.bool(), -float('inf'))
 
-        ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
         alpha_t = F.softmax(e_t)
         a_t = torch.squeeze(torch.bmm(torch.unsqueeze(alpha_t, dim=1), enc_hiddens), dim=1)
         U_t = torch.cat((dec_hidden, a_t), dim=1)
         V_t = self.combined_output_projection(U_t)
         O_t = self.dropout(torch.tanh(V_t))
-
-
-        ### END YOUR CODE FROM ASSIGNMENT 4
 
         combined_output = O_t
         return dec_state, combined_output, e_t

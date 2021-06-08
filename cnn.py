@@ -9,10 +9,6 @@ import torch
 import torch.nn as nn
 
 class CNN(nn.Module):
-    # pass
-    # Remember to delete the above 'pass' after your implementation
-    ### YOUR CODE HERE for part 1g
-
     def __init__(self, char_embed_size, word_embed_size, kernel_size=5, padding=1):
         """ Init 1-D Conv Network.
 
@@ -60,6 +56,3 @@ class CNN(nn.Module):
         X_conv_out = torch.max(self.relu(X_conv), dim=2)[0]
 
         return X_conv_out
-
-    ### END YOUR CODE
-

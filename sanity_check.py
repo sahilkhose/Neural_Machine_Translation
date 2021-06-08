@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """
-CS224N 2019-20: Homework 5
-sanity_check.py: sanity checks for assignment 5
 Usage:
     sanity_check.py 1e
     sanity_check.py 1h

@@ -42,8 +42,6 @@ class CharDecoder(nn.Module):
 
         return s_t, (h_n, c_n)
 
-        ### END YOUR CODE
-
     def train_forward(self, char_sequence, dec_hidden=None):
         """ Forward computation during training.
 
@@ -52,20 +50,12 @@ class CharDecoder(nn.Module):
 
         @returns The cross-entropy loss (Tensor), computed as the *sum* of cross-entropy losses of all the words in the batch.
         """
-        ### YOUR CODE HERE for part 2b
-        ### TODO - Implement training forward pass.
-        ###
-        ### Hint: - Make sure padding characters do not contribute to the cross-entropy loss. Check vocab.py to find the padding token's index.
-        ###       - char_sequence corresponds to the sequence x_1 ... x_{n+1} (e.g., <START>,m,u,s,i,c,<END>). Read the handout about how to construct input and target sequence of CharDecoderLSTM.
-        ###       - Carefully read the documentation for nn.CrossEntropyLoss and our handout to see what this criterion have already included:
-        ###             https://pytorch.org/docs/stable/nn.html#crossentropyloss
         s_t, (h_n, c_n) = self.forward(char_sequence[:-1], dec_hidden)
 
         loss_fn = nn.CrossEntropyLoss(ignore_index=self.target_vocab.char2id['<pad>'], reduction='sum')
         loss = loss_fn(s_t.view(-1, len(self.target_vocab.char2id)), char_sequence[1:].contiguous().view(-1))
         return loss
 
-        ### END YOUR CODE
 
     def decode_greedy(self, initialStates, device, max_length=21):
         """ Greedy decoding
@@ -76,16 +66,6 @@ class CharDecoder(nn.Module):
         @returns decodedWords (List[str]): a list (of length batch_size) of strings, each of which has length <= max_length.
                               The decoded strings should NOT contain the start-of-word and end-of-word characters.
         """
-
-        ### YOUR CODE HERE for part 2c
-        ### TODO - Implement greedy decoding.
-        ### Hints:
-        ###      - Use initialStates to get batch_size.
-        ###      - Use target_vocab.char2id and target_vocab.id2char to convert between integers and characters
-        ###      - Use torch.tensor(..., device=device) to turn a list of character indices into a tensor.
-        ###      - You may find torch.argmax or torch.argmax useful
-        ###      - We use curly brackets as start-of-word and end-of-word characters. That is, use the character '{' for <START> and '}' for <END>.
-        ###        Their indices are self.target_vocab.start_of_word and self.target_vocab.end_of_word, respectively.
         batch_size = initialStates[0].shape[1]
 
         current_char = [self.target_vocab.char2id['{']] * batch_size  # len: (batch_size, )
@@ -118,5 +98,3 @@ class CharDecoder(nn.Module):
             decodedWords[i] = decodedWords[i].partition('}')[0]
 
         return decodedWords
-        ### END YOUR CODE
-

@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-"""
-CS224N 2019-20: Homework 5
-utils.py:
-Pencheng Yin <pcyin@cs.cmu.edu>
-Sahil Chopra <schopra8@stanford.edu>
-"""
-
 import math
 from typing import List
 
@@ -62,11 +54,8 @@ def pad_sents(sents, pad_token):
         Output shape: (batch_size, max_sentence_length)
     """
     sents_padded = []
-
-    ### COPY OVER YOUR CODE FROM ASSIGNMENT 4
     maxLength = max(map(len, sents)) 
     sents_padded = list(map(lambda sent: sent+[pad_token]*(maxLength-len(sent)), sents))
-    ### END YOUR CODE FROM ASSIGNMENT 4
 
     return sents_padded
 
