@@ -1,5 +1,5 @@
 import streamlit as st
-from google_trans_new.google_trans_new import google_translator
+from trans_new.google_trans_new import google_translator
 from docopt import docopt
 import run
 import numpy as np 
