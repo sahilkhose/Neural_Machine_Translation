@@ -6,5 +6,4 @@ numpy
 scipy
 nltk
 torchvision
-google_trans_new
 streamlit
